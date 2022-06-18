@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>科技改变命运</title>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
+    <script type="text/javascript" src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
+</head>
+
+<body>
+你好啊葛佳兴！！！
+路径：<input type="text" id="input" />
+生成路径：<input type="text" id="output" />
+<button id="btn">点击</button>
+<div id="loading" style="display: none">
+    <img src='./img/loading.gif' style="position:absolute;top:50%;left:50%;margin-left: -50px;margin-top: -50px;
+    width: 100px;height: 100px;border: 1px  gold;text-align:center;line-height:100px" />
+</div>
+</body>
+<script type="application/javascript">
+    $("#btn").click(function () {
+        var inUrl = $("#input").val().replace("\\", "/");
+        var outUrl = $("#output").val().replace("\\", "/");
+        $.ajax({
+            url: "airMathController/getAirExcel" ,
+            type:'post',
+            data:'inputUrl='+inUrl+'&&outputUrl='+outUrl,
+            // timeout:15000,
+            beforeSend:function(XMLHttpRequest){
+                // 数据加载成功之前，显示loading...
+                $("#loading").show();
+        },
+        success:function(data){
+            $("#loading").hide();     // 成功后，隐藏loading...
+            if (data === "1") {
+                alert("生成失败！！！！！");
+            } else {
+                alert("生成成功！！！！！");
+            }
+        }
+    });
+    });
+
+</script>
+</html>
