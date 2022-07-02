@@ -60,11 +60,27 @@
             <version>1.16.10</version>
             <scope>provided</scope>
         </dependency>
+        <!--beautifulUI-->
+        <dependency>
+            <groupId>beautyeye_lnf</groupId>
+            <artifactId>beautyeye_lnf</artifactId>
+            <version>3.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/beautyeye_lnf.jar</systemPath>
+        </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
+            <!--打包打本地jar-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
