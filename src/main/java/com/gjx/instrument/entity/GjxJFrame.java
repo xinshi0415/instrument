@@ -29,7 +29,7 @@ public class GjxJFrame extends JFrame {
         return instance;
     }
     public void initUI() {
-        this.setTitle("葛佳兴小工具");
+        this.setTitle("小小小小工具");
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBounds(100, 100, 700, 540);
