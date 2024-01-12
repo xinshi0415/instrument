@@ -18,6 +18,13 @@ public class IndexJFrame extends JFrame {
     private JProgressBar progressBar;
     private IndexJFrame() {
     }
+    /**
+     * @Author zhy
+     * @Desc 实例化Jframe
+     * @Date 2024/1/12 17:25
+     * @Param
+     * @return
+     */
     public static IndexJFrame getInstance() {
         if (null == instance) {
             synchronized (IndexJFrame.class) {
