@@ -1,6 +1,6 @@
-package com.gjx.instrument;
+package com.zhy.instrument;
 
-import com.gjx.instrument.entity.GjxJFrame;
+import com.zhy.instrument.view.IndexJFrame;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,7 +11,7 @@ import javax.swing.*;
 @SpringBootApplication
 public class InstrumentApplication {
     public InstrumentApplication() {
-        GjxJFrame.getInstance().initUI();
+        IndexJFrame.getInstance().initUI();
     }
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package com.gjx.instrument.service;
+package com.zhy.instrument.service;
 
 public interface AirMathService {
     /**

@@ -1,4 +1,4 @@
-package com.gjx.instrument.entity;
+package com.zhy.instrument.view;
 
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
@@ -13,27 +13,42 @@ import java.util.concurrent.atomic.AtomicReference;
  * @create 2022-07-02 17:06
  * @desc 样式类
  **/
-public class GjxJFrame extends JFrame {
-    private static GjxJFrame instance = null;
+public class IndexJFrame extends JFrame {
+    private static IndexJFrame instance = null;
     private JProgressBar progressBar;
-    private GjxJFrame() {
+    private IndexJFrame() {
     }
-    public static GjxJFrame getInstance() {
+    public static IndexJFrame getInstance() {
         if (null == instance) {
-            synchronized (GjxJFrame.class) {
+            synchronized (IndexJFrame.class) {
                 if (null == instance) {
-                    instance = new GjxJFrame();
+                    instance = new IndexJFrame();
                 }
             }
         }
         return instance;
     }
+
+    /** @Author zhy
+     * @Description 初始化JFrame
+     * @Date 2024/1/12 15:45
+     * @Param
+     * @return
+     */
     public void initUI() {
         this.setTitle("小小小小工具");
+        //窗口是否可以调节大小
         this.setResizable(false);
+        //客户点击关闭同时关闭程序
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBounds(100, 100, 700, 540);
+        //this.setBounds(100, 100, 700, 540);
+        //设置窗体可见
         this.setVisible(true);
+        //设置窗口大小
+        this.setSize(700,540);
+        //本语句实现窗口居屏幕中央
+        this.setLocationRelativeTo(null);
+
 
         JPanel panel = new JPanel();
         panel.setLayout(null);

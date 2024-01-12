@@ -1,11 +1,8 @@
-package com.gjx.instrument.service.impl;
+package com.zhy.instrument;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.gjx.instrument.entity.GjxFile;
-import com.gjx.instrument.service.AirMathService;
-import lombok.extern.slf4j.Slf4j;
+import com.zhy.instrument.entity.AtrFileDto;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -14,26 +11,32 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.stereotype.Service;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
-@Service
-@Slf4j
-public class AirMathServiceImpl implements AirMathService {
 
-    @Override
-    public void collectAirExcel(String inputUrl, String outputUrl) throws Exception {
-        File file = new File(inputUrl);
-        List<GjxFile> list = new ArrayList<>();
-        showLayers(file, list);
-        //处理数据并进行生成文件
-        createFile(list, outputUrl);
+
+class InstrumentApplicationTests {
+
+    @Test
+    void contextLoads() {
     }
 
-    public static void showLayers(File file, List<GjxFile> list) throws IOException {
+    public static void main(String[] args) throws IOException {
+        File file = new File("E:\\gjx");
+        List<AtrFileDto> list = new ArrayList<>();
+        showLayers(file, list);
+        //处理数据并进行生成文件
+        createFile(list);
+    }
+
+    public static void showLayers(File file, List<AtrFileDto> list) throws IOException {
 
         //判断是文件还是文件夹【文件就不需要在向下查找了，文件夹需要继续查找】
         File[] files = file.listFiles();
@@ -48,12 +51,7 @@ public class AirMathServiceImpl implements AirMathService {
                 //处理需要处理的文件
                 //System.out.println(tempFile.getAbsolutePath());
                 System.out.println(tempFile.getName() + "正在处理中！！！");
-               // try {
-                    handleInputFile(tempFile, list);
-//                } catch (Exception e) {
-//                    log.error("出现问题，文件名称={}, 错误信息={}", tempFile.getName(), e.getMessage());
-//                    e.printStackTrace();
-//                }
+                handleInputFile(tempFile, list);
             }
         }
     }
@@ -63,7 +61,7 @@ public class AirMathServiceImpl implements AirMathService {
      *
      * @param file
      */
-    public static void handleInputFile(File file, List<GjxFile> list) throws IOException {
+    public static void handleInputFile(File file, List<AtrFileDto> list) throws IOException {
         if (file.getName().contains("empty")) {
             return;
         } else if (file.getName().endsWith(".csv")) {
@@ -74,7 +72,7 @@ public class AirMathServiceImpl implements AirMathService {
 
     }
 
-    public static void handleCsvFile(File file, List<GjxFile> list) throws IOException {
+    public static void handleCsvFile(File file, List<AtrFileDto> list) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String content = null;
         //readLine这个方法的时候需要注意，判断读取到文件末尾使用 null
@@ -85,42 +83,34 @@ public class AirMathServiceImpl implements AirMathService {
             //这里处理集合
             //System.out.println(content);
             String[] split = content.split(",");
-            GjxFile gjxFile = new GjxFile();
-            gjxFile.setIndex(split[0]);
-            gjxFile.setAqi(split[1]);
-            gjxFile.setCo(split[2]);
-            gjxFile.setNo2(split[3]);
-            gjxFile.setO3(split[4]);
-            gjxFile.setPm10(split[5]);
-            gjxFile.setPm2_5(split[6]);
-            gjxFile.setQuality(split[7]);
-            gjxFile.setRank(split[8]);
-            gjxFile.setSo2(split[9]);
-            gjxFile.setTimePoint(DateUtil.format(DateUtil.parse(split[10]), "yyyy/MM/dd"));
-            gjxFile.setCity(split[11]);
-            list.add(gjxFile);
+            AtrFileDto atrFileDto = new AtrFileDto();
+            atrFileDto.setIndex(split[0]);
+            atrFileDto.setAqi(split[1]);
+            atrFileDto.setCo(split[2]);
+            atrFileDto.setNo2(split[3]);
+            atrFileDto.setO3(split[4]);
+            atrFileDto.setPm10(split[5]);
+            atrFileDto.setPm2_5(split[6]);
+            atrFileDto.setQuality(split[7]);
+            atrFileDto.setRank(split[8]);
+            atrFileDto.setSo2(split[9]);
+            atrFileDto.setTimePoint(split[10]);
+            atrFileDto.setCity(split[11]);
+            list.add(atrFileDto);
         }
         br.close();
     }
 
-    public static void handleXlsxFile(File file, List<GjxFile> list) throws IOException {
+    public static void handleXlsxFile(File file, List<AtrFileDto> list) throws IOException {
         //获取文件
         FileInputStream fileInputStream = new FileInputStream(file);
         //获取工作薄
         Workbook workbook = new XSSFWorkbook(fileInputStream);
-        if (ObjectUtil.isEmpty(workbook)) {
-            return;
-        }
         //得到表
         Sheet sheet = workbook.getSheetAt(0);
-        if (ObjectUtil.isEmpty(sheet)) {
-            return;
-        }
+
         //获取标题内容
         Row rowTitle = sheet.getRow(0);
-        if (ObjectUtil.isEmpty(rowTitle)) {
-            return;
-        }
         //获取表中的内容
         int rowCount = sheet.getPhysicalNumberOfRows();
         for (int rowNum = 1; rowNum < rowCount; rowNum++) {
@@ -128,8 +118,8 @@ public class AirMathServiceImpl implements AirMathService {
             if (rowData != null) {
                 //读取列
                 int cellCout = rowTitle.getPhysicalNumberOfCells();
-                // List<String> cells = new ArrayList<>();
-                GjxFile gjxFile = new GjxFile();
+               // List<String> cells = new ArrayList<>();
+                AtrFileDto atrFileDto = new AtrFileDto();
                 for (int cellNum = 0; cellNum < cellCout; cellNum++) {
                     //System.out.print("【" + (rowNum+1) + "-" + (cellNum+1) + "】");
 
@@ -179,46 +169,46 @@ public class AirMathServiceImpl implements AirMathService {
                     //这里是为了模板的排序不一致需要进行转换，进行匹配列名
                     switch (rowTitle.getCell(cellNum).getStringCellValue()) {
                         case "日期" :
-                            gjxFile.setTimePoint(cellValue);
+                            atrFileDto.setTimePoint(cellValue);
                             break;
                         case "AQI" :
-                            gjxFile.setAqi(cellValue);
+                            atrFileDto.setAqi(cellValue);
                             break;
                         case "质量等级" :
-                            gjxFile.setQuality(cellValue);
+                            atrFileDto.setQuality(cellValue);
                             break;
                         case "PM2.5":
-                            gjxFile.setPm2_5(cellValue);
+                            atrFileDto.setPm2_5(cellValue);
                             break;
                         case "PM10":
-                            gjxFile.setPm10(cellValue);
+                            atrFileDto.setPm10(cellValue);
                             break;
                         case "SO2":
-                            gjxFile.setSo2(cellValue);
+                            atrFileDto.setSo2(cellValue);
                             break;
                         case "NO2":
-                            gjxFile.setNo2(cellValue);
+                            atrFileDto.setNo2(cellValue);
                             break;
                         case "CO":
-                            gjxFile.setCo(cellValue);
+                            atrFileDto.setCo(cellValue);
                             break;
                         case "O3_8h":
-                            gjxFile.setO3(cellValue);
+                            atrFileDto.setO3(cellValue);
                             break;
                     }
                 }
                 //有一个不为空 都要保留数据
-                if (StrUtil.isNotBlank(gjxFile.getO3()) ||
-                        StrUtil.isNotBlank(gjxFile.getTimePoint()) ||
-                        StrUtil.isNotBlank(gjxFile.getQuality()) ||
-                        StrUtil.isNotBlank(gjxFile.getPm2_5()) ||
-                        StrUtil.isNotBlank(gjxFile.getPm10()) ||
-                        StrUtil.isNotBlank(gjxFile.getSo2()) ||
-                        StrUtil.isNotBlank(gjxFile.getNo2()) ||
-                        StrUtil.isNotBlank(gjxFile.getCo()) ||
-                        StrUtil.isNotBlank(gjxFile.getAqi())) {
-                    gjxFile.setCity(file.getName().substring(0, file.getName().indexOf("20")));
-                    list.add(gjxFile);
+                if (StrUtil.isNotBlank(atrFileDto.getO3()) ||
+                        StrUtil.isNotBlank(atrFileDto.getTimePoint()) ||
+                        StrUtil.isNotBlank(atrFileDto.getQuality()) ||
+                        StrUtil.isNotBlank(atrFileDto.getPm2_5()) ||
+                        StrUtil.isNotBlank(atrFileDto.getPm10()) ||
+                        StrUtil.isNotBlank(atrFileDto.getSo2()) ||
+                        StrUtil.isNotBlank(atrFileDto.getNo2()) ||
+                        StrUtil.isNotBlank(atrFileDto.getCo()) ||
+                        StrUtil.isNotBlank(atrFileDto.getAqi())) {
+                    atrFileDto.setCity(file.getName().substring(0, file.getName().indexOf("20")));
+                    list.add(atrFileDto);
                 }
                 /*if (CollUtil.isNotEmpty(cells) && cells.size() != 0) {
                     GjxFile gjxFile = new GjxFile();
@@ -251,13 +241,10 @@ public class AirMathServiceImpl implements AirMathService {
      *
      * @param list
      */
-    public static void createFile(List<GjxFile> list, String outputUrl) throws IOException {
+    public static void createFile(List<AtrFileDto> list) throws IOException {
         long begin = System.currentTimeMillis();
         Collator instance = Collator.getInstance(Locale.CHINA);
-        List<GjxFile> sortList = list.stream()
-                .sorted(Comparator.comparingLong(o -> DateUtil.parse(o.getTimePoint()).getTime()))
-                .sorted((p1, p2) -> instance.compare(p1.getCity(), p2.getCity()))
-                .collect(Collectors.toList());
+        List<AtrFileDto> sortList = list.stream().sorted((p1, p2) -> instance.compare(p1.getCity(), p2.getCity())).collect(Collectors.toList());
         //创建簿
         Workbook workbook = new SXSSFWorkbook();
         //创建表
@@ -297,44 +284,30 @@ public class AirMathServiceImpl implements AirMathService {
         cell09.setCellValue("quality");
 
         //写数据
-        for (int rowNum = 0; rowNum < sortList.size(); rowNum++) {
+        for (int rowNum = 0; rowNum < list.size(); rowNum++) {
             Row row = sheet.createRow(rowNum + 1);
             Cell cellX0 = row.createCell(0);
-            cellX0.setCellValue(sortList.get(rowNum).getTimePoint());
+            cellX0.setCellValue(list.get(rowNum).getTimePoint());
             Cell cellX1 = row.createCell(1);
-            cellX1.setCellValue(sortList.get(rowNum).getCity());
+            cellX1.setCellValue(list.get(rowNum).getCity());
             Cell cellX2 = row.createCell(2);
-            if (StrUtil.isNotBlank(sortList.get(rowNum).getAqi())) {
-                cellX2.setCellValue(Double.parseDouble(sortList.get(rowNum).getAqi()));
-            }
+            cellX2.setCellValue(Double.parseDouble(list.get(rowNum).getAqi()));
             Cell cellX3 = row.createCell(3);
-            if (StrUtil.isNotBlank(sortList.get(rowNum).getCo())) {
-                cellX3.setCellValue(Double.parseDouble(sortList.get(rowNum).getCo()));
-            }
+            cellX3.setCellValue(Double.parseDouble(list.get(rowNum).getCo()));
             Cell cellX4 = row.createCell(4);
-            if (StrUtil.isNotBlank(sortList.get(rowNum).getNo2())) {
-                cellX4.setCellValue(Double.parseDouble(sortList.get(rowNum).getNo2()));
-            }
+            cellX4.setCellValue(Double.parseDouble(list.get(rowNum).getNo2()));
             Cell cellX5 = row.createCell(5);
-            if (StrUtil.isNotBlank(sortList.get(rowNum).getO3())) {
-                cellX5.setCellValue(Double.parseDouble(sortList.get(rowNum).getO3()));
-            }
+            cellX5.setCellValue(Double.parseDouble(list.get(rowNum).getO3()));
             Cell cellX6 = row.createCell(6);
-            if (StrUtil.isNotBlank(sortList.get(rowNum).getPm10())) {
-                cellX6.setCellValue(Double.parseDouble(sortList.get(rowNum).getPm10()));
-            }
+            cellX6.setCellValue(Double.parseDouble(list.get(rowNum).getPm10()));
             Cell cellX7 = row.createCell(7);
-            if (StrUtil.isNotBlank(sortList.get(rowNum).getPm2_5())) {
-                cellX7.setCellValue(Double.parseDouble(sortList.get(rowNum).getPm2_5()));
-            }
+            cellX7.setCellValue(Double.parseDouble(list.get(rowNum).getPm2_5()));
             Cell cellX8 = row.createCell(8);
-            if (StrUtil.isNotBlank(sortList.get(rowNum).getSo2())) {
-                cellX8.setCellValue(Double.parseDouble(sortList.get(rowNum).getSo2()));
-            }
+            cellX8.setCellValue(Double.parseDouble(list.get(rowNum).getSo2()));
             Cell cellX9 = row.createCell(9);
-            cellX9.setCellValue(sortList.get(rowNum).getQuality());
+            cellX9.setCellValue(list.get(rowNum).getQuality());
         }
-        FileOutputStream fileOutputStream = new FileOutputStream(outputUrl+ "\\airCollection.xlsx");
+        FileOutputStream fileOutputStream = new FileOutputStream("E:\\insertFile\\airTest.xlsx");
         workbook.write(fileOutputStream);
         fileOutputStream.close();
         //清除临时文件

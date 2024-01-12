@@ -1,8 +1,8 @@
-package com.gjx.instrument.entity;
+package com.zhy.instrument.entity;
 
 import java.util.Objects;
 
-public class GjxFile {
+public class AtrFileDto {
     private String index;
     private String aqi;
     private String co;
@@ -16,7 +16,7 @@ public class GjxFile {
     private String timePoint;
     private String city;
 
-    public GjxFile() {
+    public AtrFileDto() {
     }
 
     public String getIndex() {
@@ -31,8 +31,8 @@ public class GjxFile {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GjxFile gjxFile = (GjxFile) o;
-        return Objects.equals(index, gjxFile.index) && Objects.equals(aqi, gjxFile.aqi) && Objects.equals(co, gjxFile.co) && Objects.equals(no2, gjxFile.no2) && Objects.equals(o3, gjxFile.o3) && Objects.equals(pm10, gjxFile.pm10) && Objects.equals(pm2_5, gjxFile.pm2_5) && Objects.equals(quality, gjxFile.quality) && Objects.equals(rank, gjxFile.rank) && Objects.equals(so2, gjxFile.so2) && Objects.equals(timePoint, gjxFile.timePoint) && Objects.equals(city, gjxFile.city);
+        AtrFileDto atrFileDto = (AtrFileDto) o;
+        return Objects.equals(index, atrFileDto.index) && Objects.equals(aqi, atrFileDto.aqi) && Objects.equals(co, atrFileDto.co) && Objects.equals(no2, atrFileDto.no2) && Objects.equals(o3, atrFileDto.o3) && Objects.equals(pm10, atrFileDto.pm10) && Objects.equals(pm2_5, atrFileDto.pm2_5) && Objects.equals(quality, atrFileDto.quality) && Objects.equals(rank, atrFileDto.rank) && Objects.equals(so2, atrFileDto.so2) && Objects.equals(timePoint, atrFileDto.timePoint) && Objects.equals(city, atrFileDto.city);
     }
 
     @Override

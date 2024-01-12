@@ -1,6 +1,6 @@
-package com.gjx.instrument.controller;
+package com.zhy.instrument.controller;
 
-import com.gjx.instrument.service.AirMathService;
+import com.zhy.instrument.service.AirMathService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
