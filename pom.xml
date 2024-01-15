@@ -61,13 +61,13 @@
             <scope>provided</scope>
         </dependency>
         <!--beautifulUI-->
-        <dependency>
-            <groupId>beautyeye_lnf</groupId>
-            <artifactId>beautyeye_lnf</artifactId>
-            <version>3.7</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/beautyeye_lnf.jar</systemPath>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>beautyeye_lnf</groupId>-->
+<!--            <artifactId>beautyeye_lnf</artifactId>-->
+<!--            <version>3.7</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/lib/beautyeye_lnf.jar</systemPath>-->
+<!--        </dependency>-->
 
     </dependencies>
 

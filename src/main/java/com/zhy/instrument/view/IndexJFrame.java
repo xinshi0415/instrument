@@ -1,6 +1,5 @@
 package com.zhy.instrument.view;
 
-import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -42,7 +41,7 @@ public class IndexJFrame extends JFrame {
      * @Param
      * @return
      */
-    public void initUI() {
+    public void initUI() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         this.setTitle("小小小小工具");
         //窗口是否可以调节大小
         this.setResizable(false);
@@ -55,22 +54,25 @@ public class IndexJFrame extends JFrame {
         this.setSize(700,540);
         //本语句实现窗口居屏幕中央
         this.setLocationRelativeTo(null);
+        //设置小窗口风格
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
-        this.setContentPane(panel);
         JLabel fileFild = new JLabel("无");
         fileFild.setBounds(200,150,500,30);
         AtomicReference<JFileChooser> file = new AtomicReference<>(new JFileChooser());
         JButton openBtn = new JButton("选择文件");
         openBtn.addActionListener(e -> file.set(showFileOpenDialog(this, fileFild)));
         openBtn.setBounds(160,100,100,30);
-        openBtn.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.green));
+        //openBtn.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.green));
         openBtn.setFont(new Font("宋体", Font.BOLD,15));
-        openBtn.setForeground(Color.white);//字体颜色
+        //字体颜色
+        openBtn.setForeground(Color.white);
         panel.add(openBtn);
         panel.add(fileFild);
+        this.setContentPane(panel);
     }
 
     private JFileChooser showFileOpenDialog(Component parent, JLabel textField) {
