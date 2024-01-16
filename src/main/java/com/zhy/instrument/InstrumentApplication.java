@@ -10,17 +10,8 @@ import javax.swing.*;
 @SpringBootApplication
 public class InstrumentApplication {
     public InstrumentApplication() {
-        try {
-            IndexJFrame.getInstance().initUI();
-        } catch (UnsupportedLookAndFeelException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        //初始化主页
+        IndexJFrame.getInstance().initUI();
     }
 
     public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -32,7 +23,8 @@ public class InstrumentApplication {
 //        } catch(Exception e) {
 //            //TODO exception
 //        }
-
+        //添加风格(跟随系统)
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         ApplicationContext ctx = new SpringApplicationBuilder(InstrumentApplication.class)
                 .headless(false).run(args);
